@@ -7,71 +7,87 @@
     <link rel="stylesheet" type="text/css" href="site.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
-<body>
-    <div id="pic1" class="bg" style="background-image: url(ronald1.jpg)"></div>
-    <div id="pic2" class="bg" style="background-image: url(ronald2.jpg)"></div>
-    <div id="pic3" class="bg" style="background-image: url(ronald3.jpg)"></div>
-    <div id="pic4" class="bg" style="background-image: url(ronald4.jpg)"></div>
-    <div id="pic5" class="bg" style="background-image: url(ronald5.jpg)"></div>
-
-    <audio id="mcDrivin" autoplay loop>
-        <source src="McDrivin.mp3" type="audio/mp3">
-    </audio>
-
-    <script>
-        window.onload = function () {
-            document.getElementById("mcDrivin").play();
-        };</script>
-    <video class="centered-thing" width="500" height="440" autoplay muted loop>
+<body style="margin: none">
+    <div id="overlay" class="fullscreen overlay" >
+        <div class="begin-button" onclick="engageSite(this)">yeah</div>
+    </div>
+    <div id="pic1" class="fullscreen creepy" style="background-image: url(ronald1.jpg)"></div>
+    <div id="pic2" class="fullscreen creepy" style="background-image: url(ronald2.jpg)"></div>
+    <div id="pic3" class="fullscreen creepy" style="background-image: url(ronald3.jpg)"></div>
+    <div id="pic4" class="fullscreen creepy" style="background-image: url(ronald4.jpg)"></div>
+    <div id="pic5" class="fullscreen creepy" style="background-image: url(ronald5.jpg)"></div>
+    <video class="centered-thing" width="500" height="440" autoplay loop>
         <source src="McDrivin.mp4" type="video/mp4">
         Your browser does not support the HTML5 Video element.
     </video>
-    <iframe src="silence.mp3" allow="autoplay" id="audio" style="display:none"></iframe>
-    <div id="back"class="bg" style="background-image: url(burger2.png);"></div>
+    <div id="background" class="bg fullscreen" style="background-image: url(burger2.png);"></div>
 
 
 
     <script>
-        $('#pic1').hide();
-        $('#pic2').hide();
-        $('#pic3').hide();
-        $('#pic4').hide();
-        $('#pic5').hide();
-        $('body').hide();
+        var isLooping = true;
+        var videoLength = 105000;
+        $('body').on('mousemove', () => {
+            if(!isLooping) {
+                isLooping = true;
+                togglePictures();
+            }
+        });
 
-        for (var i = 0; i < 10; i++) {
-            setTimeout(function () { $('#pic1').show(); }, 7000);
-            setTimeout(function () { $('video').hide(); }, 7000);
-            setTimeout(function () { $('#back').hide(); }, 7000);
-            setTimeout(function () { $('#pic1').hide(); }, 7300);
-            setTimeout(function () { $('video').show(); }, 7300);
-            setTimeout(function () { $('#back').show(); }, 7300);
-            setTimeout(function () { $('#pic2').show(); }, 10000);
-            setTimeout(function () { $('video').hide(); }, 10000);
-            setTimeout(function () { $('#back').hide(); }, 10000);
-            setTimeout(function () { $('#pic2').hide(); }, 10300);
-            setTimeout(function () { $('video').show(); }, 10300);
-            setTimeout(function () { $('#back').show(); }, 10300);
-            setTimeout(function () { $('#pic3').show(); }, 15000);
-            setTimeout(function () { $('video').hide(); }, 15000);
-            setTimeout(function () { $('#back').hide(); }, 15000);
-            setTimeout(function () { $('#pic3').hide(); }, 15300);
-            setTimeout(function () { $('video').show(); }, 15300);
-            setTimeout(function () { $('#back').show(); }, 15300);
-            setTimeout(function () { $('#pic4').show(); }, 18000);
-            setTimeout(function () { $('video').hide(); }, 18000);
-            setTimeout(function () { $('#back').hide(); }, 18000);
-            setTimeout(function () { $('#pic4').hide(); }, 18300);
-            setTimeout(function () { $('video').show(); }, 18300);
-            setTimeout(function () { $('#back').show(); }, 18300);
-            setTimeout(function () { $('#pic5').show(); }, 24000);
-            setTimeout(function () { $('video').hide(); }, 24000);
-            setTimeout(function () { $('#back').hide(); }, 24000);
-            setTimeout(function () { $('#pic5').hide(); }, 24300);
-            setTimeout(function () { $('#back').show(); }, 24300);
-            setTimeout(function () { $('video').show(); }, 24300);
-            $('body').fadeIn(10000).fadeOut(500).fadeIn(4000).fadeOut(3000).fadeIn(300).fadeOut(3200).fadeIn(1400);
-        };
+        function engageSite(el) {
+            removeOverlay(el);
+            revealBackground();
+            playVideo();
+            togglePictures();
+        }
+
+        function removeOverlay(el) {
+            el.parentElement.style.display = 'none';
+        }
+        
+        function revealBackground() {
+            $('#background').show();
+        }
+
+        function playVideo() {
+            let video = $('video');
+            video.show();
+            video.get(0).play();
+        }
+
+        function togglePictures() {
+            let pictures = getPictures();
+            setTimeout(() => {
+                isLooping = false;
+            }, 105000);
+            let remaining = videoLength;
+            while(remaining > 0) {
+                let i = getRandomNumber(0, pictures.length);
+                let picture =  pictures[i];
+                let intervalTime = getRandomNumber(2000, 6000)
+                let fadeTime = getRandomNumber(100, 500);
+                remaining -= (fadeTime + intervalTime);
+                setTimeout(() => {
+                    picture.fadeToggle(fadeTime, () => {
+                        picture.fadeToggle(fadeTime);
+                    });
+                }, remaining)
+            }           
+        }
+
+        function getPictures() {
+            let pictures = [];
+            for (let i = 1; i < 6; i++) {
+                pictures.push($(`#pic${i}`));  
+            }
+            return pictures;
+        }
+
+        function getRandomNumber(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+        }
     </script>
 </body>
 </html>
