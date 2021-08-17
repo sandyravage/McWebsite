@@ -16,7 +16,7 @@
     <div id="pic3" class="fullscreen creepy" style="background-image: url(ronald3.jpg)"></div>
     <div id="pic4" class="fullscreen creepy" style="background-image: url(ronald4.jpg)"></div>
     <div id="pic5" class="fullscreen creepy" style="background-image: url(ronald5.jpg)"></div>
-    <video class="centered-thing" width="500" height="440" autoplay loop>
+    <video class="centered-thing" width="500" height="440" autoplay>
         <source src="McDrivin.mp4" type="video/mp4">
         Your browser does not support the HTML5 Video element.
     </video>
@@ -27,11 +27,9 @@
     <script>
         var isLooping = true;
         var videoLength = 105000;
-        $('body').on('mousemove', () => {
-            if(!isLooping) {
-                isLooping = true;
-                togglePictures();
-            }
+        $('video').on('ended', () => {
+            this.play();
+            togglePictures();
         });
 
         function engageSite(el) {
@@ -57,9 +55,6 @@
 
         function togglePictures() {
             let pictures = getPictures();
-            setTimeout(() => {
-                isLooping = false;
-            }, 105000);
             let remaining = videoLength;
             while(remaining > 0) {
                 let i = getRandomNumber(0, pictures.length);
