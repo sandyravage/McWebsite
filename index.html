@@ -26,7 +26,7 @@
 
     <script>
         $('video').on('ended', () => {
-            this.play();
+            $('video').get(0).play();
             togglePictures();
         });
 
